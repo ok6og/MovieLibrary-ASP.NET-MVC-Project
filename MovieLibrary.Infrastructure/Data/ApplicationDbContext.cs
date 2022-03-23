@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace MovieLibrary.Data
+namespace MovieLibrary.Infrastructure.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieLibrary.Core.Constants;
-using MovieLibrary.Data;
+using MovieLibrary.Infrastructure.Data;
 using MovieLibrary.ModelBinders;
 
 var builder = WebApplication.CreateBuilder(args);
