@@ -35,7 +35,11 @@ namespace MovieLibrary.Infrastructure.Data
         [Required]
         public string PosterImageUrl { get; set; }
 
-        public ICollection<MovieRatings> MovieRatings { get; set; } = new List<MovieRatings>();
+        [Required]
+        public int GenreId { get; set; }
+        public MovieGenre Genre { get; init; }
+
+        public ICollection<MovieRating> MovieRatings { get; set; } = new List<MovieRating>();
         public ICollection<MovieWatchlist> MovieWatchList { get; set; } = new List<MovieWatchlist>();
 
 

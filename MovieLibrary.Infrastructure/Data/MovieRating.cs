@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MovieLibrary.Infrastructure.Data
 {
-    public class MovieRatings
+    public class MovieRating
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
