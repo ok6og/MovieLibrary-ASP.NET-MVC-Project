@@ -1,6 +1,10 @@
-﻿namespace MovieLibrary.Extensions
+﻿namespace Microsoft.Extensions.DependencyInjection
 {
-    public class ServiceCollectionExtension
+    public static class ServiceCollectionExtension
     {
+        public static IServiceCollection AddApplicationServices(this IServiceCollection service)
+        {
+            return service;
+        }
     }
 }
