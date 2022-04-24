@@ -2,8 +2,10 @@
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection service)
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddScoped<IApplicatioDbRepository>
+
             return service;
         }
     }
