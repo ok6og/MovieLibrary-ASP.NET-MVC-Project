@@ -128,7 +128,7 @@ namespace MovieLibrary.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Грешни данни за вход.");
                     return Page();
                 }
             }
