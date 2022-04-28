@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static MovieLibrary.Data.DataConstants;
+using static MovieLibrary.Data.DataConstants.Movie;
+using static MovieLibrary.Data.DataConstants.ImageUrl;
+
 
 namespace MovieLibrary.Models.Movies
 {
@@ -7,25 +9,25 @@ namespace MovieLibrary.Models.Movies
     {
 
         [Required]
-        [StringLength(MovieTitleMaxLength, MinimumLength = MovieTitleMinLength)]       
+        [StringLength(TitleMaxLength, MinimumLength = TitleMinLength)]       
         public string Title { get; init; }
 
         [Required]
-        [StringLength(MovieDescriptionMaxLength, MinimumLength = MovieTitleMinLength)]
+        [StringLength(DescriptionMaxLength, MinimumLength = TitleMinLength)]
         public string Description { get; init; }
 
-        [StringLength(ImageUrlMaxLength)]
+        [StringLength(UrlMaxLength)]
         [Display(Name ="Image URL")]
         [Required]
         [Url]                
         public string ImageUrl { get; init; }
 
-        [Range(MovieYearMinValue,MovieYearMaxValue)]
+        [Range(YearMinValue,YearMaxValue)]
 
         public int Year { get; init; }
 
         [Display(Name = "Runtime In Minutes")]
-        [Range(MovieRuntimeMinValue,MovieRuntimeMaxValue)]
+        [Range(RuntimeMinValue,RuntimeMaxValue)]
         public int RuntimeInMinutes { get; init; }
 
         [Display(Name = "Genre")]

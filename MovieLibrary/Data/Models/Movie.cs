@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static MovieLibrary.Data.DataConstants;
+using static MovieLibrary.Data.DataConstants.Movie;
+using static MovieLibrary.Data.DataConstants.ImageUrl;
 
 namespace MovieLibrary.Data.Models
 {
@@ -8,15 +9,15 @@ namespace MovieLibrary.Data.Models
         public int Id { get; init; }
 
         [Required]
-        [MaxLength(MovieTitleMaxLength)]
+        [MaxLength(TitleMaxLength)]
         public string Title { get; set; }   
         
         [Required]
-        [MaxLength(MovieDescriptionMaxLength)]
+        [MaxLength(DescriptionMaxLength)]
         public string Description { get; set; }
 
         [Required]
-        [MaxLength(ImageUrlMaxLength)]
+        [MaxLength(UrlMaxLength)]
         public string ImageUrl { get; set; }
 
         [Required]
@@ -26,5 +27,7 @@ namespace MovieLibrary.Data.Models
         public int RuntimeInMinutes { get; set; }        
         public int GenreId { get; set; }
         public Genre Genre { get; init; }
+        public int TicketSellerId { get; init; }
+        public TicketSeller TicketSeller { get; init; }
     }
 }

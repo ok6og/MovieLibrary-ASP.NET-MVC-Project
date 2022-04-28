@@ -2,16 +2,35 @@
 {
     public class DataConstants
     {
-        public const int MovieTitleMaxLength = 100;
-        public const int MovieTitleMinLength = 2;
-        public const int MovieGenreMaxLength = 20;
-        public const int MovieDescriptionMinLength = 10;
-        public const int MovieDescriptionMaxLength = 1000;
-        public const int MovieYearMinValue = 1875;
-        public const int MovieYearMaxValue = 2050;
-        public const int MovieRuntimeMinValue = 1;
-        public const int MovieRuntimeMaxValue = 999;
+        public class Movie
+        {
+            public const int TitleMaxLength = 100;
+            public const int TitleMinLength = 2;           
+            public const int DescriptionMinLength = 10;
+            public const int DescriptionMaxLength = 1000;
+            public const int YearMinValue = 1875;
+            public const int YearMaxValue = 2050;
+            public const int RuntimeMinValue = 1;
+            public const int RuntimeMaxValue = 999;
+        }
+        public class Genre
+        {
+            public const int NameMaxLength = 25;
+        }
+        
+        public class TicketSeller
+        {
+            public const int NameMaxLength = 25;
+            public const int PhoneNumberMaxLength = 30;
+        }
+        
+        public class ImageUrl
+        {
+            public const int UrlMaxLength = 2048;
+        }
 
-        public const int ImageUrlMaxLength = 2048;
+        
+
+        
     }
 }
