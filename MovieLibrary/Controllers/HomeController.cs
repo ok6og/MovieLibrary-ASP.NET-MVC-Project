@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using MovieLibrary.Models;
 using MovieLibrary.Data;
-using MovieLibrary.Models.Movies;
+using MovieLibrary.Models.Home;
 
 namespace MovieLibrary.Controllers
 {
@@ -14,23 +14,30 @@ namespace MovieLibrary.Controllers
             => this.data = data;
         public IActionResult Index()
         {
+            var totalMovies = this.data.Movies.Count();
             var movies = this.data
                 .Movies
                 .OrderByDescending(m => m.Id)
-                .Select(c => new MovieListingViewModel
+                .Select(c => new MovieIndexViewModel
                 {
                     Id = c.Id,
-                    Description = c.Description,
-                    Genre = c.Genre.Name,
-                    ImageUrl = c.ImageUrl,
-                    RuntimeInMinutes = c.RuntimeInMinutes,
                     Title = c.Title,
+                    Description = c.Description,
+                    ImageUrl = c.ImageUrl,
+                    RuntimeInMinutes = c.RuntimeInMinutes,                    
                     Year = c.Year,
                 })
                 .Take(3)
                 .ToList();
 
-            return View(movies);
+
+
+            return View(new IndexViewModel
+            {
+                TotalMovies = totalMovies,
+                Movies = movies
+
+            });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

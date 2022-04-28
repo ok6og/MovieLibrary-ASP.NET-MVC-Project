@@ -12,17 +12,38 @@ namespace MovieLibrary.Controllers
         public MoviesController(MovieLibraryDbContext data)
             => this.data = data;
 
-        [HttpGet]
-        public IActionResult Add() => View(new AddMovieFormModel
-        {
-            Genres = this.GetMovieGenres()
-        });
 
-        public IActionResult All()
+
+        public IActionResult All([FromQuery] AllMoviesQueryModel query)
         {
-            var movies = this.data
-                .Movies
-                .OrderByDescending(m => m.Id)
+            var moviesQuery = this.data.Movies.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.Genre))
+            {
+                moviesQuery = moviesQuery.Where(m => m.Genre.Name == query.Genre);
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            {
+                moviesQuery = moviesQuery.Where(m =>
+                    m.Title.ToLower().Contains(query.SearchTerm.ToLower()) ||
+                    m.Year.ToString().ToLower().Contains(query.SearchTerm.ToLower()) ||
+                    m.Description.ToLower().Contains(query.SearchTerm.ToLower()));
+            }
+
+            moviesQuery = query.Sorting switch
+            {
+
+                MovieSorting.Title => moviesQuery.OrderBy(m => m.Title),
+                MovieSorting.Year => moviesQuery.OrderByDescending(m => m.Year),
+                MovieSorting.Runtime => moviesQuery.OrderBy(m => m.Id),
+                MovieSorting.DateCreated or _ => moviesQuery.OrderByDescending(m => m.Id)
+            };
+            var totalMovies = moviesQuery.Count();
+
+            var movies = moviesQuery
+                .Skip((query.CurrentPage - 1) * AllMoviesQueryModel.MoviesPerPage)
+                .Take(AllMoviesQueryModel.MoviesPerPage)
                 .Select(c => new MovieListingViewModel
                 {
                     Id = c.Id,
@@ -34,9 +55,24 @@ namespace MovieLibrary.Controllers
                     Year = c.Year,
                 })
                 .ToList();
+            var movieGenres = this.data
+                .Movies
+                .Select(m => m.Genre.Name)
+                .Distinct()
+                .OrderBy(g => g)
+                .ToList();
 
-            return View(movies);
+            query.TotalMovies = totalMovies;
+            query.Genres = movieGenres;
+            query.Movies = movies;
+
+            return View(query);
         }
+        [HttpGet]
+        public IActionResult Add() => View(new AddMovieFormModel
+        {
+            Genres = this.GetMovieGenres()
+        });
 
         [HttpPost]
         public IActionResult Add(AddMovieFormModel movie)
