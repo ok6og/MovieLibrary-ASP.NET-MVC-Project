@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MovieLibrary.Migrations
 {
-    public partial class MovieDataBase : Migration
+    public partial class AddedMoreGenres : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,7 +54,7 @@ namespace MovieLibrary.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,6 +168,27 @@ namespace MovieLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TicketSeller",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TicketSeller", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TicketSeller_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Movies",
                 columns: table => new
                 {
@@ -178,7 +199,8 @@ namespace MovieLibrary.Migrations
                     ImageUrl = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
                     RuntimeInMinutes = table.Column<int>(type: "int", nullable: false),
-                    GenreId = table.Column<int>(type: "int", nullable: false)
+                    GenreId = table.Column<int>(type: "int", nullable: false),
+                    TicketSellerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,6 +209,12 @@ namespace MovieLibrary.Migrations
                         name: "FK_Movies_Genres_GenreId",
                         column: x => x.GenreId,
                         principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Movies_TicketSeller_TicketSellerId",
+                        column: x => x.TicketSellerId,
+                        principalTable: "TicketSeller",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -234,6 +262,17 @@ namespace MovieLibrary.Migrations
                 name: "IX_Movies_GenreId",
                 table: "Movies",
                 column: "GenreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movies_TicketSellerId",
+                table: "Movies",
+                column: "TicketSellerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TicketSeller_UserId",
+                table: "TicketSeller",
+                column: "UserId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -260,10 +299,13 @@ namespace MovieLibrary.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Genres");
 
             migrationBuilder.DropTable(
-                name: "Genres");
+                name: "TicketSeller");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

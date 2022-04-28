@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieLibrary.Data;
 using MovieLibrary.Data.Models;
+using MovieLibrary.Infrastructure;
 using MovieLibrary.Models.Movies;
+using System.Security.Claims;
 
 namespace MovieLibrary.Controllers
 {
@@ -69,14 +72,35 @@ namespace MovieLibrary.Controllers
             return View(query);
         }
         [HttpGet]
-        public IActionResult Add() => View(new AddMovieFormModel
+        [Authorize]
+        public IActionResult Add()
         {
-            Genres = this.GetMovieGenres()
-        });
+            if (!this.UserIsTicketSeller())
+            {
+                return RedirectToAction(nameof(TicketSellerController.Become), "TicketSeller");
+            }
+
+            return View(new AddMovieFormModel
+            {
+                Genres = this.GetMovieGenres()
+            });
+        }
+            
 
         [HttpPost]
+        [Authorize]
         public IActionResult Add(AddMovieFormModel movie)
         {
+            var ticketSellerId = this.data
+                .TicketSeller
+                .Where(t => t.UserId == this.User.GetId())
+                .Select(t => t.Id)
+                .FirstOrDefault();
+
+            if (ticketSellerId == 0)
+            {
+                return RedirectToAction(nameof(TicketSellerController.Become), "TicketSeller");
+            }
             if (!this.data.Genres.Any(g => g.Id == movie.GenreId))
             {
                 this.ModelState.AddModelError(nameof(movie.GenreId), "Genre does not exist.");
@@ -94,13 +118,21 @@ namespace MovieLibrary.Controllers
                 ImageUrl = movie.ImageUrl,
                 Year = movie.Year,
                 RuntimeInMinutes = movie.RuntimeInMinutes,
-                GenreId = movie.GenreId
+                GenreId = movie.GenreId,
+                TicketSellerId = ticketSellerId
             };
+
             this.data.Movies.Add(movieData);
             this.data.SaveChanges();
 
             return RedirectToAction(nameof(All));
         }
+
+        private bool UserIsTicketSeller()
+            => this.data
+                .TicketSeller
+                .Any(t => t.UserId == this.User.GetId());
+
 
         private IEnumerable<MovieGenreViewModel> GetMovieGenres()
             => this.data

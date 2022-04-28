@@ -13,7 +13,6 @@ namespace MovieLibrary.Data
         }
         public DbSet<Movie> Movies { get; init; }
         public DbSet<Genre> Genres { get; init; }
-
         public DbSet<TicketSeller> TicketSeller { get; init; }
 
         protected override void OnModelCreating(ModelBuilder builder)

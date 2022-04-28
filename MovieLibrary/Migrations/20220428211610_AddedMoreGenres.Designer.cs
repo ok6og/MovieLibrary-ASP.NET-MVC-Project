@@ -12,8 +12,8 @@ using MovieLibrary.Data;
 namespace MovieLibrary.Migrations
 {
     [DbContext(typeof(MovieLibraryDbContext))]
-    [Migration("20220427225223_MovieDataBase")]
-    partial class MovieDataBase
+    [Migration("20220428211610_AddedMoreGenres")]
+    partial class AddedMoreGenres
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,7 +226,7 @@ namespace MovieLibrary.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TheMovieLibrary.Data.Models.Genre", b =>
+            modelBuilder.Entity("MovieLibrary.Data.Models.Genre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -236,15 +236,15 @@ namespace MovieLibrary.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("TheMovieLibrary.Data.Models.Movie", b =>
+            modelBuilder.Entity("MovieLibrary.Data.Models.Movie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -268,6 +268,9 @@ namespace MovieLibrary.Migrations
                     b.Property<int>("RuntimeInMinutes")
                         .HasColumnType("int");
 
+                    b.Property<int>("TicketSellerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -280,7 +283,39 @@ namespace MovieLibrary.Migrations
 
                     b.HasIndex("GenreId");
 
+                    b.HasIndex("TicketSellerId");
+
                     b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("MovieLibrary.Data.Models.TicketSeller", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("TicketSeller");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -334,18 +369,40 @@ namespace MovieLibrary.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TheMovieLibrary.Data.Models.Movie", b =>
+            modelBuilder.Entity("MovieLibrary.Data.Models.Movie", b =>
                 {
-                    b.HasOne("TheMovieLibrary.Data.Models.Genre", "Genre")
+                    b.HasOne("MovieLibrary.Data.Models.Genre", "Genre")
                         .WithMany("Movies")
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MovieLibrary.Data.Models.TicketSeller", "TicketSeller")
+                        .WithMany("Movies")
+                        .HasForeignKey("TicketSellerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Genre");
+
+                    b.Navigation("TicketSeller");
                 });
 
-            modelBuilder.Entity("TheMovieLibrary.Data.Models.Genre", b =>
+            modelBuilder.Entity("MovieLibrary.Data.Models.TicketSeller", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithOne()
+                        .HasForeignKey("MovieLibrary.Data.Models.TicketSeller", "UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MovieLibrary.Data.Models.Genre", b =>
+                {
+                    b.Navigation("Movies");
+                });
+
+            modelBuilder.Entity("MovieLibrary.Data.Models.TicketSeller", b =>
                 {
                     b.Navigation("Movies");
                 });
