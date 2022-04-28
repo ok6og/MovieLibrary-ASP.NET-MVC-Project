@@ -18,10 +18,30 @@ namespace MovieLibrary.Controllers
             Genres = this.GetMovieGenres()
         });
 
+        public IActionResult All()
+        {
+            var movies = this.data
+                .Movies
+                .OrderByDescending(m => m.Id)
+                .Select(c => new MovieListingViewModel
+                {
+                    Id = c.Id,
+                    Description = c.Description,
+                    Genre = c.Genre.Name,
+                    ImageUrl = c.ImageUrl,
+                    RuntimeInMinutes = c.RuntimeInMinutes,
+                    Title = c.Title,
+                    Year = c.Year,
+                })
+                .ToList();
+
+            return View(movies);
+        }
+
         [HttpPost]
         public IActionResult Add(AddMovieFormModel movie)
         {
-            if(!this.data.Genres.Any(g=> g.Id == movie.GenreId))
+            if (!this.data.Genres.Any(g => g.Id == movie.GenreId))
             {
                 this.ModelState.AddModelError(nameof(movie.GenreId), "Genre does not exist.");
             }
@@ -43,7 +63,7 @@ namespace MovieLibrary.Controllers
             this.data.Movies.Add(movieData);
             this.data.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(All));
         }
 
         private IEnumerable<MovieGenreViewModel> GetMovieGenres()
