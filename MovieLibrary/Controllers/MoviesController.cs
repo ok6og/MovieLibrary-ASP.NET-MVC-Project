@@ -160,7 +160,7 @@ namespace MovieLibrary.Controllers
                 return BadRequest();
             }
 
-            this.movies.Edit(
+              var edited = this.movies.Edit(
                 id,
                 movie.Title,
                 movie.Description,
@@ -169,6 +169,11 @@ namespace MovieLibrary.Controllers
                 movie.RuntimeInMinutes,
                 movie.GenreId,
                 this.User.IsAdmin());
+
+            if (!edited)
+            {
+                return BadRequest();
+            }
 
             TempData[GlobalMessageKey] = $"Movie wassuccessfully edited {(this.User.IsAdmin() ? string.Empty : "and is waiting for approval!")}";
 

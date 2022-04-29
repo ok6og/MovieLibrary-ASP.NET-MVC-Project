@@ -13,24 +13,16 @@ using System.Linq;
 using MyTested.AspNetCore.Mvc;
 using System.Collections.Generic;
 using FluentAssertions;
+using System;
+
+using static MovieLibrary.Test.Data.Movies;
+using static MovieLibrary.WebConstants.Cache;
 
 namespace MyShirtsApp.Test.Controllers
 {
     public class HomeControllerTest
     {
-        //[Fact]
-        //public void IndexShouldReturnViewWithCorrectModelAndData()
-        //    => MyController<HomeController>
-        //    .Instance(controller => controller
-        //    .WithData(Enumerable
-        //        .Range(0,10)
-        //        .Select(i=> new Movie())))
-        //    .Calling(c=>c.Index())
-        //    .ShouldReturn()
-        //    .View(view => view
-        //    .WithModelOfType<IndexViewModel>()
-        //    .Passing(m=> m.Movies.Should().HaveCount(3)));
-
+        
         [Fact]
         public void IndexShouldReturnViewWithCorrectModel()
         {
@@ -68,16 +60,16 @@ namespace MyShirtsApp.Test.Controllers
         [Fact]
         public void IndexShouldReturnView()
         {
-            var data = DatabaseMock.Instance;
-            var mapper = MapperMock.Instance;
-            var movieService = new MovieService(data, mapper);
-            var statisticsService = new StatisticsService(data);
-            var homeController = new HomeController(movieService,null);
+            var movieService = new MovieService(DatabaseMock.Instance, MapperMock.Instance);
+
+            var homeController = new HomeController(null,null);
 
             var result = homeController.Index();
 
             Assert.NotNull(result);
             Assert.IsType<ViewResult>(result);
         }
+
+
     }
 }

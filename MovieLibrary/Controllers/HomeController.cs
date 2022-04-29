@@ -2,6 +2,8 @@
 using MovieLibrary.Services.Movies;
 using Microsoft.Extensions.Caching.Memory;
 
+using static MovieLibrary.WebConstants.Cache;
+
 namespace MovieLibrary.Controllers
 {
     public class HomeController : Controller
@@ -19,9 +21,7 @@ namespace MovieLibrary.Controllers
 
         public IActionResult Index()
         {
-            const string latestMoviesCacheKey = "LatestMoviesCacheKey";
-
-            var latestMovies = this.cache.Get<List<LatestMoviesServiceModel>>(latestMoviesCacheKey);
+            var latestMovies = this.cache.Get<List<LatestMoviesServiceModel>>(LatestMoviesCacheKey);
 
             if (latestMovies == null)
             {
@@ -30,7 +30,7 @@ namespace MovieLibrary.Controllers
                 var cacheOptions = new MemoryCacheEntryOptions()
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
 
-                this.cache.Set(latestMoviesCacheKey, latestMovies, cacheOptions);
+                this.cache.Set(LatestMoviesCacheKey, latestMovies, cacheOptions);
             }
             return View(latestMovies);
         }
