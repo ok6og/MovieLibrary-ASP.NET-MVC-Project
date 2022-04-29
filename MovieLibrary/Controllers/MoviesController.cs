@@ -100,14 +100,14 @@ namespace MovieLibrary.Controllers
         {
             var userId = this.User.Id();
 
-            if (!this.ticketSeller.IsTicketSeller(userId))
+            if (!this.ticketSeller.IsTicketSeller(userId) && !User.IsAdmin())
             {
                 return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
             }
 
             var movie = this.movies.Details(id);
 
-            if(movie.UserId != userId)
+            if(movie.UserId != userId && !User.IsAdmin())
             {
                 return Unauthorized();
             }
@@ -131,7 +131,7 @@ namespace MovieLibrary.Controllers
         {
             var ticketSellerId = this.ticketSeller.IdByUser(this.User.Id());
 
-            if (ticketSellerId == 0)
+            if (ticketSellerId == 0 && !User.IsAdmin())
             {
                 return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
             }
@@ -145,7 +145,7 @@ namespace MovieLibrary.Controllers
                 return View(movie);
             }
 
-            if (!this.movies.IsByTicketSeller(id,ticketSellerId))
+            if (!this.movies.IsByTicketSeller(id,ticketSellerId) && !User.IsAdmin())
             {
                 return BadRequest();
             }

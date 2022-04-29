@@ -12,14 +12,15 @@
 
         var userId = User.Id();
         var userIsTicketSeller = TicketSellers.IsTicketSeller(userId);
+        var userIsAdmin = User.IsAdmin;
 
-        if (userIsTicketSeller)
+        if (userIsTicketSeller && !userIsAdmin())
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Movies" asp-action="Mine">My Movies</a>
             </li>
         }
-        else
+        else if(!userIsAdmin())
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="TicketSellers" asp-action="Become">Become Ticket Seller</a>
