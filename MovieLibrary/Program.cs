@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieLibrary.Data;
+using MovieLibrary.Data.Models;
 using MovieLibrary.Infrastructure;
 using MovieLibrary.Services.Movies;
 using MovieLibrary.Services.Statistics;
@@ -15,17 +16,18 @@ builder.Services.AddDbContext<MovieLibraryDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+builder.Services.AddDefaultIdentity<User>(options =>
 {
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
 })
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<MovieLibraryDbContext>();
 builder.Services.AddControllersWithViews(options =>
         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>()
-    ); 
+    );
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 builder.Services.AddTransient<IMovieService, MovieService>();
 builder.Services.AddTransient<ITicketSellerService, TicketSellerService>();

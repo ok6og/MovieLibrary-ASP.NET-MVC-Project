@@ -5,7 +5,7 @@ using MovieLibrary.Data.Models;
 
 namespace MovieLibrary.Data
 {
-    public class MovieLibraryDbContext : IdentityDbContext
+    public class MovieLibraryDbContext : IdentityDbContext<User>
     {      
         public MovieLibraryDbContext(DbContextOptions<MovieLibraryDbContext> options)
             : base(options)
@@ -34,7 +34,7 @@ namespace MovieLibrary.Data
 
             builder
                 .Entity<TicketSeller>()
-                .HasOne<IdentityUser>()
+                .HasOne<User>()
                 .WithOne()
                 .HasForeignKey<TicketSeller>(t => t.UserId)
                 .OnDelete(DeleteBehavior.Restrict);

@@ -31,6 +31,15 @@
             public const int UrlMaxLength = 2048;
         }
 
+        public class User
+        {
+            public const int FullNameMinLength = 5;
+            public const int FullNameMaxLength = 50;
+            public const int PasswordMinLength = 6;
+            public const int PasswordMaxLength = 100;
+            
+        }
+
         
 
         
