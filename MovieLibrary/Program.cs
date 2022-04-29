@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieLibrary.Data;
 using MovieLibrary.Infrastructure;
+using MovieLibrary.Services.Movies;
+using MovieLibrary.Services.Statistics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 })
 .AddEntityFrameworkStores<MovieLibraryDbContext>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<IStatisticsService, StatisticsService>();
+builder.Services.AddTransient<IMovieService, MovieService>();
 
 var app = builder.Build();
 

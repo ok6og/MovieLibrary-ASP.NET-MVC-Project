@@ -3,18 +3,26 @@ using System.Diagnostics;
 using MovieLibrary.Models;
 using MovieLibrary.Data;
 using MovieLibrary.Models.Home;
+using MovieLibrary.Services.Statistics;
 
 namespace MovieLibrary.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IStatisticsService statistics;
         private readonly MovieLibraryDbContext data;
 
-        public HomeController(MovieLibraryDbContext data)
-            => this.data = data;
+        public HomeController(
+            IStatisticsService statistics,
+            MovieLibraryDbContext data)
+        {
+            this.statistics = statistics;
+            this.data = data;
+        }
+
         public IActionResult Index()
         {
-            var totalMovies = this.data.Movies.Count();
+            
             var movies = this.data
                 .Movies
                 .OrderByDescending(m => m.Id)
@@ -30,12 +38,15 @@ namespace MovieLibrary.Controllers
                 .Take(3)
                 .ToList();
 
+            var totalStatistics = this.statistics.Total();
 
 
             return View(new IndexViewModel
             {
-                TotalMovies = totalMovies,
+                TotalMovies = totalStatistics.TotalMovies,
+                TotalUsers = totalStatistics.TotalUsers,
                 Movies = movies
+
 
             });
         }

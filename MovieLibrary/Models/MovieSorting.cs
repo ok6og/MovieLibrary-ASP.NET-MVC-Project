@@ -1,4 +1,4 @@
-﻿namespace MovieLibrary.Models.Movies
+﻿namespace MovieLibrary.Models
 {
     public enum MovieSorting
     {

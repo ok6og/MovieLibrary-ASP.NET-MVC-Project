@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MovieLibrary.Services.Movies;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieLibrary.Models.Movies
 {
@@ -13,6 +14,6 @@ namespace MovieLibrary.Models.Movies
         public int CurrentPage { get; init; } = 1;
         public int TotalMovies { get; set; }
         public IEnumerable<string> Genres { get; set; }
-        public IEnumerable<MovieListingViewModel> Movies { get; set; }
+        public IEnumerable<MovieServiceModel> Movies { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MovieLibrary.Data;
+using MovieLibrary.Models.Api.Movies;
+using MovieLibrary.Services.Movies;
+
 
 namespace MovieLibrary.Controllers.Api
 {
@@ -7,9 +9,20 @@ namespace MovieLibrary.Controllers.Api
     [Route("api/movies")]
     public class MoviesApiController : ControllerBase
     {
-        private readonly MovieLibraryDbContext data;
+        private readonly IMovieService movies;
 
-        public MoviesApiController(MovieLibraryDbContext data) 
-            => this.data = data;
+        public MoviesApiController(IMovieService movies) 
+            => this.movies = movies;
+
+
+        [HttpGet]
+        public MovieQueryServiceModel All([FromQuery] AllMoviesApiRequestModel query) 
+            => this.movies.All(
+                query.Genre,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                query.MoviesPerPage);
+
     }
 }

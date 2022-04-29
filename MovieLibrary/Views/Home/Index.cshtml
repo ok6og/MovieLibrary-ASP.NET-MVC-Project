@@ -33,7 +33,7 @@
                     <h5><a class="btn btn-primary" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id">@movie.Title (@movie.Year)</a></h5>
                 </div>
             </div>
-        }       
+        }
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
         <span class="carousel-control-prev-icon fill-dark" aria-hidden="true"></span>
@@ -47,16 +47,34 @@
 
 <div class="mb-5"></div>
 
-<div class="jumbotron">
+<div class="row">
+    <div class="col-12 text-center">
+        <button class="btn btn-primary" id="statistics-button">Show Statistics</button>
+    </div>
+
+</div>
+
+<div class="jumbotron d-none" id="statistics">
     <div class="row">
-        <h2 class="col-md-4 text-center" >
-            @Model.TotalMovies Total Movies
-        </h2>
-        <h2 class="col-md-4 text-center">
-            @Model.TotalUsers Total Users
-        </h2>
-        <h2 class="col-md-4 text-center">
-            @Model.TotalWatches Total Watches
-        </h2>
+        <h2 class="col-md-4 text-center" id="total-movies"></h2>
+        <h2 class="col-md-4 text-center" id="total-users"></h2>
+        <h2 class="col-md-4 text-center" id="total-watches"></h2>
     </div>
 </div>
+
+@section Scripts{
+<script>
+    $('#statistics-button').on('click', ev=>{
+        $.get('/api/statistics', (data)=>{
+            $('#total-movies').text(data.totalMovies + " Movies");
+            $('#total-users').text(data.totalUsers + " Users");
+            $('#total-watches').text(data.totalWatches + " Watches");
+
+            $('#statistics').removeClass('d-none');
+            $('#statistics-button').hide();
+        });
+    });
+
+    
+</script>
+}

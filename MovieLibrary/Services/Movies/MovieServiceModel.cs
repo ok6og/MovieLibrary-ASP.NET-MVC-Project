@@ -1,6 +1,6 @@
-﻿namespace MovieLibrary.Models.Movies
+﻿namespace MovieLibrary.Services.Movies
 {
-    public class MovieListingViewModel
+    public class MovieServiceModel
     {
         public int Id { get; init; }
         public string Title { get; init; }

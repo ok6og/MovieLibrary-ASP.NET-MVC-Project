@@ -3,71 +3,41 @@ using Microsoft.AspNetCore.Mvc;
 using MovieLibrary.Data;
 using MovieLibrary.Data.Models;
 using MovieLibrary.Infrastructure;
+using MovieLibrary.Models;
 using MovieLibrary.Models.Movies;
+using MovieLibrary.Services.Movies;
 using System.Security.Claims;
 
 namespace MovieLibrary.Controllers
 {
     public class MoviesController : Controller
     {
+        private readonly IMovieService movies;
         private readonly MovieLibraryDbContext data;
 
-        public MoviesController(MovieLibraryDbContext data)
-            => this.data = data;
+        public MoviesController(MovieLibraryDbContext data, IMovieService movies)
+        {
+            this.data = data;
+            this.movies = movies;
+        }
+           
 
 
 
         public IActionResult All([FromQuery] AllMoviesQueryModel query)
         {
-            var moviesQuery = this.data.Movies.AsQueryable();
+            var queryResult = this.movies.All(
+                query.Genre,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                AllMoviesQueryModel.MoviesPerPage);
 
-            if (!string.IsNullOrWhiteSpace(query.Genre))
-            {
-                moviesQuery = moviesQuery.Where(m => m.Genre.Name == query.Genre);
-            }
-
-            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
-            {
-                moviesQuery = moviesQuery.Where(m =>
-                    m.Title.ToLower().Contains(query.SearchTerm.ToLower()) ||
-                    m.Year.ToString().ToLower().Contains(query.SearchTerm.ToLower()) ||
-                    m.Description.ToLower().Contains(query.SearchTerm.ToLower()));
-            }
-
-            moviesQuery = query.Sorting switch
-            {
-
-                MovieSorting.Title => moviesQuery.OrderBy(m => m.Title),
-                MovieSorting.Year => moviesQuery.OrderByDescending(m => m.Year),
-                MovieSorting.Runtime => moviesQuery.OrderBy(m => m.Id),
-                MovieSorting.DateCreated or _ => moviesQuery.OrderByDescending(m => m.Id)
-            };
-            var totalMovies = moviesQuery.Count();
-
-            var movies = moviesQuery
-                .Skip((query.CurrentPage - 1) * AllMoviesQueryModel.MoviesPerPage)
-                .Take(AllMoviesQueryModel.MoviesPerPage)
-                .Select(c => new MovieListingViewModel
-                {
-                    Id = c.Id,
-                    Description = c.Description,
-                    Genre = c.Genre.Name,
-                    ImageUrl = c.ImageUrl,
-                    RuntimeInMinutes = c.RuntimeInMinutes,
-                    Title = c.Title,
-                    Year = c.Year,
-                })
-                .ToList();
-            var movieGenres = this.data
-                .Movies
-                .Select(m => m.Genre.Name)
-                .Distinct()
-                .OrderBy(g => g)
-                .ToList();
-
-            query.TotalMovies = totalMovies;
+            var movieGenres = this.movies.AllMovieGenres();
+            
+            query.TotalMovies = queryResult.TotalMovies;
             query.Genres = movieGenres;
-            query.Movies = movies;
+            query.Movies = queryResult.Movies;
 
             return View(query);
         }
