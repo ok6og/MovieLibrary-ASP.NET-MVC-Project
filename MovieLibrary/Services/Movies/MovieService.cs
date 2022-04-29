@@ -165,5 +165,13 @@ namespace MovieLibrary.Services.Movies
             => this.data
             .Movies
             .Any(m => m.Id == movieId && m.TicketSellerId == ticketSellerId);
+
+        public IEnumerable<LatestMoviesServiceModel> Latest()
+            => this.data
+                .Movies
+                .OrderByDescending(m => m.Id)
+                .ProjectTo<LatestMoviesServiceModel>(this.mapper.ConfigurationProvider)
+                .Take(3)
+                .ToList();
     }
 }

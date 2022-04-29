@@ -12,6 +12,8 @@ namespace MovieLibrary.Services.Movies
             int moviesPerPage);
         MovieDetailsServiceModel Details(int carId);
 
+        public IEnumerable<LatestMoviesServiceModel>Latest();
+
         int Create(
                 string title,
                 string description,

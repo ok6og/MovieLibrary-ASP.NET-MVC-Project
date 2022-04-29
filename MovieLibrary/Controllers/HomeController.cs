@@ -1,54 +1,41 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using MovieLibrary.Models;
-using MovieLibrary.Data;
-using MovieLibrary.Models.Home;
-using MovieLibrary.Services.Statistics;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using MovieLibrary.Services.Movies;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MovieLibrary.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IStatisticsService statistics;
-        private readonly MovieLibraryDbContext data;
-        private readonly IMapper mapper;
+        private readonly IMovieService movies;
+        private readonly IMemoryCache cache;
 
         public HomeController(
-            IStatisticsService statistics,
-            MovieLibraryDbContext data,
-            IMapper mapper)
+            IMovieService movies,
+            IMemoryCache cache)
         {
-            this.statistics = statistics;
-            this.data = data;
-            this.mapper = mapper;
+            this.movies = movies;
+            this.cache = cache;
         }
 
         public IActionResult Index()
         {
+            const string latestMoviesCacheKey = "LatestMoviesCacheKey";
 
-            var movies = this.data
-                .Movies
-                .OrderByDescending(m => m.Id)
-                .ProjectTo<MovieIndexViewModel>(this.mapper.ConfigurationProvider)
-                .Take(3)
-                .ToList();
+            var latestMovies = this.cache.Get<List<LatestMoviesServiceModel>>(latestMoviesCacheKey);
 
-            var totalStatistics = this.statistics.Total();
-
-
-            return View(new IndexViewModel
+            if (latestMovies == null)
             {
-                TotalMovies = totalStatistics.TotalMovies,
-                TotalUsers = totalStatistics.TotalUsers,
-                Movies = movies
+                latestMovies = this.movies.Latest().ToList();
 
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
 
-            });
+                this.cache.Set(latestMoviesCacheKey, latestMovies, cacheOptions);
+            }
+            return View(latestMovies);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+        public IActionResult Error() => View();
     }
 }
