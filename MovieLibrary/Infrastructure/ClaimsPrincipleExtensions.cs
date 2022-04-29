@@ -4,7 +4,7 @@ namespace MovieLibrary.Infrastructure
 {
     public static class ClaimsPrincipleExtensions
     {
-        public static string GetId(this ClaimsPrincipal user)
+        public static string Id(this ClaimsPrincipal user)
             => user.FindFirst(ClaimTypes.NameIdentifier).Value;
     }
 }

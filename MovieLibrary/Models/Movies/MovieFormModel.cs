@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static MovieLibrary.Data.DataConstants.Movie;
 using static MovieLibrary.Data.DataConstants.ImageUrl;
-
+using MovieLibrary.Services.Movies;
 
 namespace MovieLibrary.Models.Movies
 {
-    public class AddMovieFormModel
+    public class MovieFormModel
     {
 
         [Required]
@@ -32,6 +32,6 @@ namespace MovieLibrary.Models.Movies
 
         [Display(Name = "Genre")]
         public int GenreId { get; init; }
-        public IEnumerable<MovieGenreViewModel>? Genres { get; set; }
+        public IEnumerable<MovieGenreServiceModel>? Genres { get; set; }
     }
 }

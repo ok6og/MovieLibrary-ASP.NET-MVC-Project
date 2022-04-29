@@ -8,6 +8,6 @@
         public string ImageUrl { get; init; }
         public int Year { get; init; }
         public int RuntimeInMinutes { get; init; }
-        public string Genre { get; init; }
+        public string GenreName { get; init; }
     }
 }

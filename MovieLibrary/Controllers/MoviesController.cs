@@ -1,24 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieLibrary.Data;
-using MovieLibrary.Data.Models;
 using MovieLibrary.Infrastructure;
-using MovieLibrary.Models;
 using MovieLibrary.Models.Movies;
 using MovieLibrary.Services.Movies;
-using System.Security.Claims;
+using MovieLibrary.Services.TicketSellers;
 
 namespace MovieLibrary.Controllers
 {
     public class MoviesController : Controller
     {
         private readonly IMovieService movies;
-        private readonly MovieLibraryDbContext data;
+        private readonly ITicketSellerService ticketSeller;
 
-        public MoviesController(MovieLibraryDbContext data, IMovieService movies)
+
+        public MoviesController(IMovieService movies, ITicketSellerService ticketSeller)
         {
-            this.data = data;
             this.movies = movies;
+            this.ticketSeller = ticketSeller;
         }
            
 
@@ -41,47 +39,80 @@ namespace MovieLibrary.Controllers
 
             return View(query);
         }
+
+        [Authorize]
+        public IActionResult Mine()
+        {
+            var myMovies = this.movies.ByUser(this.User.Id());
+            return View(myMovies);
+        }
+
+
         [HttpGet]
         [Authorize]
         public IActionResult Add()
         {
-            if (!this.UserIsTicketSeller())
+            if (!this.ticketSeller.IsTicketSeller(this.User.Id()))
             {
-                return RedirectToAction(nameof(TicketSellerController.Become), "TicketSeller");
+                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
             }
 
-            return View(new AddMovieFormModel
+            return View(new MovieFormModel
             {
-                Genres = this.GetMovieGenres()
+                Genres = this.movies.AllGenres()
             });
         }
             
 
         [HttpPost]
         [Authorize]
-        public IActionResult Add(AddMovieFormModel movie)
+        public IActionResult Add(MovieFormModel movie)
         {
-            var ticketSellerId = this.data
-                .TicketSeller
-                .Where(t => t.UserId == this.User.GetId())
-                .Select(t => t.Id)
-                .FirstOrDefault();
+            var ticketSellerId = this.ticketSeller.IdByUser(this.User.Id());
 
             if (ticketSellerId == 0)
             {
-                return RedirectToAction(nameof(TicketSellerController.Become), "TicketSeller");
+                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
             }
-            if (!this.data.Genres.Any(g => g.Id == movie.GenreId))
+            if (!this.movies.GenreExists(movie.GenreId))
             {
                 this.ModelState.AddModelError(nameof(movie.GenreId), "Genre does not exist.");
             }
             if (!ModelState.IsValid)
             {
-                movie.Genres = this.GetMovieGenres();
+                movie.Genres = this.movies.AllGenres();
                 return View(movie);
             }
 
-            var movieData = new Movie
+            this.movies.Create(
+                movie.Title,
+                movie.Description,
+                movie.ImageUrl,
+                movie.Year,
+                movie.RuntimeInMinutes,
+                movie.GenreId,
+                ticketSellerId);
+
+            return RedirectToAction(nameof(All));
+        }
+        [Authorize]
+        public  IActionResult Edit(int id)
+        {
+            var userId = this.User.Id();
+
+            if (!this.ticketSeller.IsTicketSeller(userId))
+            {
+                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
+            }
+
+            var movie = this.movies.Details(id);
+
+            if(movie.UserId != userId)
+            {
+                return Unauthorized();
+            }
+
+            return View(new MovieFormModel
             {
                 Title = movie.Title,
                 Description = movie.Description,
@@ -89,29 +120,47 @@ namespace MovieLibrary.Controllers
                 Year = movie.Year,
                 RuntimeInMinutes = movie.RuntimeInMinutes,
                 GenreId = movie.GenreId,
-                TicketSellerId = ticketSellerId
-            };
-
-            this.data.Movies.Add(movieData);
-            this.data.SaveChanges();
-
-            return RedirectToAction(nameof(All));
+                
+                Genres = this.movies.AllGenres()
+            });
         }
 
-        private bool UserIsTicketSeller()
-            => this.data
-                .TicketSeller
-                .Any(t => t.UserId == this.User.GetId());
+        [Authorize]
+        [HttpPost]
+        public IActionResult Edit(int id, MovieFormModel movie)
+        {
+            var ticketSellerId = this.ticketSeller.IdByUser(this.User.Id());
 
-
-        private IEnumerable<MovieGenreViewModel> GetMovieGenres()
-            => this.data
-            .Genres
-            .Select(x => new MovieGenreViewModel
+            if (ticketSellerId == 0)
             {
-                Id = x.Id,
-                Name = x.Name
-            })
-            .ToList();
+                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
+            }
+            if (!this.movies.GenreExists(movie.GenreId))
+            {
+                this.ModelState.AddModelError(nameof(movie.GenreId), "Genre does not exist.");
+            }
+            if (!ModelState.IsValid)
+            {
+                movie.Genres = this.movies.AllGenres();
+                return View(movie);
+            }
+
+            if (!this.movies.IsByTicketSeller(id,ticketSellerId))
+            {
+                return BadRequest();
+            }
+
+            this.movies.Edit(
+                id,
+                movie.Title,
+                movie.Description,
+                movie.ImageUrl,
+                movie.Year,
+                movie.RuntimeInMinutes,
+                movie.GenreId);
+
+            
+            return RedirectToAction(nameof(All));
+        }
     }
 }

@@ -7,11 +7,11 @@ using MovieLibrary.Models.TicketSeller;
 
 namespace MovieLibrary.Controllers
 {
-    public class TicketSellerController : Controller
+    public class TicketSellersController : Controller
     {
         private readonly MovieLibraryDbContext data;
 
-        public TicketSellerController(MovieLibraryDbContext data) 
+        public TicketSellersController(MovieLibraryDbContext data) 
             => this.data = data;
 
         [HttpGet]
@@ -25,7 +25,7 @@ namespace MovieLibrary.Controllers
         [Authorize]
         public IActionResult Become(BecomeTicketSellerFormModel seller)
         {
-            var userId = this.User.GetId();
+            var userId = this.User.Id();
             var userIdAlreadySeller = this.data
                 .TicketSeller
                 .Any(t => t.UserId == userId);

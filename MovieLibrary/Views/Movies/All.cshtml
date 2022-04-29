@@ -79,18 +79,4 @@
 
 
 
-<div class="row">
-    @foreach (var movie in Model.Movies)
-    {
-        <div class="col-md-4">
-            <div class="card">
-                <img class="card-img-top" src="@movie.ImageUrl" alt="@movie.Title - (@movie.Year)">
-                <div class="card-body text-center">
-                    <h5 class="card-title text-center">@movie.Title (@movie.Year)</h5>
-                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-primary">View more</a>
-                </div>
-            </div>
-        </div>
-    }
-</div>
-
+<partial name="_MoviesPartial" model="@Model.Movies" />

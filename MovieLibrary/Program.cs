@@ -5,6 +5,7 @@ using MovieLibrary.Data;
 using MovieLibrary.Infrastructure;
 using MovieLibrary.Services.Movies;
 using MovieLibrary.Services.Statistics;
+using MovieLibrary.Services.TicketSellers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,7 @@ builder.Services.AddControllersWithViews(options =>
     ); 
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 builder.Services.AddTransient<IMovieService, MovieService>();
+builder.Services.AddTransient<ITicketSellerService, TicketSellerService>();
 
 var app = builder.Build();
 

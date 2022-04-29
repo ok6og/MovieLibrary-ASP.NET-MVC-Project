@@ -1,4 +1,5 @@
 ﻿using MovieLibrary.Data;
+using MovieLibrary.Data.Models;
 using MovieLibrary.Models;
 
 namespace MovieLibrary.Services.Movies
@@ -7,7 +8,7 @@ namespace MovieLibrary.Services.Movies
     {
         private readonly MovieLibraryDbContext data;
 
-        public MovieService(MovieLibraryDbContext data) 
+        public MovieService(MovieLibraryDbContext data)
             => this.data = data;
 
         public MovieQueryServiceModel All(
@@ -42,20 +43,11 @@ namespace MovieLibrary.Services.Movies
             };
             var totalMovies = moviesQuery.Count();
 
-            var movies = moviesQuery
+            var movies = GetMovies(moviesQuery
                 .Skip((currentPage - 1) * moviesPerPage)
-                .Take(moviesPerPage)
-                .Select(c => new MovieServiceModel
-                {
-                    Id = c.Id,
-                    Description = c.Description,
-                    Genre = c.Genre.Name,
-                    ImageUrl = c.ImageUrl,
-                    RuntimeInMinutes = c.RuntimeInMinutes,
-                    Title = c.Title,
-                    Year = c.Year,
-                })
-                .ToList();
+                .Take(moviesPerPage));
+
+
 
             return new MovieQueryServiceModel
             {
@@ -66,12 +58,116 @@ namespace MovieLibrary.Services.Movies
             };
         }
 
-        public IEnumerable<string> AllMovieGenres() 
+        public MovieDetailsServiceModel Details(int id)
+        {                           
+            var movie = this.data
+            .Movies
+            .Where(m => m.Id == id)
+            .Select(m => new MovieDetailsServiceModel
+            {
+                Id = m.Id,
+                Description = m.Description,
+                GenreName = m.Genre.Name,
+                RuntimeInMinutes = m.RuntimeInMinutes,
+                Title = m.Title,
+                Year = m.Year,
+                TicketSellerId = m.TicketSellerId,
+                TicketSellerName = m.TicketSeller.Name,
+                UserId = m.TicketSeller.UserId
+            })
+            .FirstOrDefault();
+
+            return movie;
+        }
+            
+
+        public IEnumerable<MovieServiceModel> ByUser(string userId)
+            => GetMovies(this.data
+                .Movies
+                .Where(m => m.TicketSeller.UserId == userId));
+
+        public IEnumerable<string> AllMovieGenres()
             => this.data
                 .Movies
                 .Select(m => m.Genre.Name)
                 .Distinct()
                 .OrderBy(g => g)
                 .ToList();
+
+        public IEnumerable<MovieGenreServiceModel> AllGenres()
+            => this.data
+                .Genres
+                .Select(x => new MovieGenreServiceModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                })
+                .ToList();
+
+
+
+        private static IEnumerable<MovieServiceModel> GetMovies(IQueryable<Movie> movieQuery)
+            => movieQuery
+                .Select(c => new MovieServiceModel
+                {
+                    Id = c.Id,
+                    Description = c.Description,
+                    GenreName = c.Genre.Name,
+                    ImageUrl = c.ImageUrl,
+                    RuntimeInMinutes = c.RuntimeInMinutes,
+                    Title = c.Title,
+                    Year = c.Year,
+                })
+                    .ToList();
+
+        public bool GenreExists(int genreId)
+            => this.data.Genres.Any(g => g.Id == genreId);
+
+        public int Create(string title, string description, string imageUrl, int year, int runtimeInMinutes, int genreId, int ticketSellerId)
+        {
+            var movieData = new Movie
+            {
+                Title = title,
+                Description = description,
+                ImageUrl = imageUrl,
+                Year = year,
+                RuntimeInMinutes = runtimeInMinutes,
+                GenreId = genreId,
+                TicketSellerId = ticketSellerId
+            };
+
+            this.data.Movies.Add(movieData);
+            this.data.SaveChanges();
+
+            return movieData.Id;
+        }
+
+        public bool Edit(int id, string title, string description, string imageUrl, int year, int runtimeInMinutes, int genreId)
+        {
+            var movieData = this.data.Movies.Find(id);
+
+            if (movieData == null)
+            {
+                return false;
+            }
+
+            movieData.Title = title;
+            movieData.Description = description;
+            movieData.ImageUrl = imageUrl;
+            movieData.Year = year;
+            movieData.RuntimeInMinutes = runtimeInMinutes;
+            movieData.GenreId = genreId;
+
+
+
+            this.data.SaveChanges();
+
+            return true;
+        }
+
+        public bool IsByTicketSeller(int movieId, int ticketSellerId)
+            => this.data
+            .Movies
+            .Any(m => m.Id == movieId && m.TicketSellerId == ticketSellerId);
     }
 }
