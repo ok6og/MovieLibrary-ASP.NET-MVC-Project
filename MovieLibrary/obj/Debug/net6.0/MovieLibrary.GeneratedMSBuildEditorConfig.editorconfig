@@ -15,6 +15,14 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\ok6og\source\repos\ok6og\MovieLibrary-ASP.NET-MVC-Project\MovieLibrary\MovieLibrary
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Areas/Admin/Views/Movies/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcTW92aWVzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Areas/Admin/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Areas/Identity/Pages/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

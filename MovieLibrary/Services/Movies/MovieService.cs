@@ -69,8 +69,10 @@ namespace MovieLibrary.Services.Movies
                 Description = m.Description,
                 GenreName = m.Genre.Name,
                 RuntimeInMinutes = m.RuntimeInMinutes,
+                ImageUrl = m.ImageUrl,
                 Title = m.Title,
                 Year = m.Year,
+                GenreId = m.Genre.Id,
                 TicketSellerId = m.TicketSellerId,
                 TicketSellerName = m.TicketSeller.Name,
                 UserId = m.TicketSeller.UserId

@@ -8,5 +8,6 @@ namespace MovieLibrary.Data.Models
     {
         [MaxLength(FullNameMaxLength)]
         public string FullName { get; set; }
+
     }
 }

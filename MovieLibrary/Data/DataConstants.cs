@@ -37,6 +37,8 @@
             public const int FullNameMaxLength = 50;
             public const int PasswordMinLength = 6;
             public const int PasswordMaxLength = 100;
+            public const int UsernameMinLength = 5;
+            public const int UsernameMaxLength = 50;
             
         }
 
