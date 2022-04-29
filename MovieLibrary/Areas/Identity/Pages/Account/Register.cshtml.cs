@@ -16,18 +16,13 @@ namespace MovieLibrary.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> signInManager;
         private readonly UserManager<User> userManager;
-        private readonly IUserStore<User> userStore;
 
 
         public RegisterModel(
             UserManager<User> userManager,
-            IUserStore<User> userStore,
-            SignInManager<User> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            SignInManager<User> signInManager)
         {
-            this.userManager = userManager;
-            this.userStore = userStore;            
+            this.userManager = userManager;           
             this.signInManager = signInManager;
         }
 
