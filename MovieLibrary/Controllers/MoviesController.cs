@@ -54,7 +54,7 @@ namespace MovieLibrary.Controllers
         {
             if (!this.ticketSeller.IsTicketSeller(this.User.Id()))
             {
-                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
+                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSellers");
             }
 
             return View(new MovieFormModel
@@ -72,7 +72,7 @@ namespace MovieLibrary.Controllers
 
             if (ticketSellerId == 0)
             {
-                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
+                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSellers");
             }
             if (!this.movies.GenreExists(movie.GenreId))
             {
@@ -102,7 +102,7 @@ namespace MovieLibrary.Controllers
 
             if (!this.ticketSeller.IsTicketSeller(userId) && !User.IsAdmin())
             {
-                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
+                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSellers");
             }
 
             var movie = this.movies.Details(id);
@@ -133,7 +133,7 @@ namespace MovieLibrary.Controllers
 
             if (ticketSellerId == 0 && !User.IsAdmin())
             {
-                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSeller");
+                return RedirectToAction(nameof(TicketSellersController.Become), "TicketSellers");
             }
             if (!this.movies.GenreExists(movie.GenreId))
             {
