@@ -11,7 +11,7 @@ namespace MovieLibrary.Services.Statistics
 
         public StatisticsServiceModel Total()
         {
-            var totalMovies = this.data.Movies.Count();
+            var totalMovies = this.data.Movies.Count(m=>m.IsPublic);
             var totalUsers = this.data.Users.Count();
 
             return new StatisticsServiceModel

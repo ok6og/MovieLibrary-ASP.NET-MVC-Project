@@ -19,13 +19,16 @@ namespace MovieLibrary.Services.Movies
          
 
         public MovieQueryServiceModel All(
-            string genre,
-            string searchTerm,
-            MovieSorting sorting,
-            int currentPage,
-            int moviesPerPage)
+            string genre =null,
+            string searchTerm = null,
+            MovieSorting sorting = MovieSorting.DateCreated,
+            int currentPage =1,
+            int moviesPerPage = int.MaxValue,
+            bool publicOnly = true)
         {
-            var moviesQuery = this.data.Movies.AsQueryable();
+
+            var moviesQuery = this.data.Movies
+                .Where(m=> !publicOnly || m.IsPublic);
 
             if (!string.IsNullOrWhiteSpace(genre))
             {
@@ -93,28 +96,15 @@ namespace MovieLibrary.Services.Movies
         public IEnumerable<MovieGenreServiceModel> AllGenres()
             => this.data
                 .Genres
-                .Select(x => new MovieGenreServiceModel
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                })
+                .ProjectTo<MovieGenreServiceModel>(this.mapper.ConfigurationProvider)
                 .ToList();
 
 
 
-        private static IEnumerable<MovieServiceModel> GetMovies(IQueryable<Movie> movieQuery)
+        private  IEnumerable<MovieServiceModel> GetMovies(IQueryable<Movie> movieQuery)
             => movieQuery
-                .Select(c => new MovieServiceModel
-                {
-                    Id = c.Id,
-                    Description = c.Description,
-                    GenreName = c.Genre.Name,
-                    ImageUrl = c.ImageUrl,
-                    RuntimeInMinutes = c.RuntimeInMinutes,
-                    Title = c.Title,
-                    Year = c.Year,
-                })
-                    .ToList();
+                .ProjectTo<MovieServiceModel>(this.mapper.ConfigurationProvider)
+                 .ToList();
 
         public bool GenreExists(int genreId)
             => this.data.Genres.Any(g => g.Id == genreId);
@@ -129,7 +119,8 @@ namespace MovieLibrary.Services.Movies
                 Year = year,
                 RuntimeInMinutes = runtimeInMinutes,
                 GenreId = genreId,
-                TicketSellerId = ticketSellerId
+                TicketSellerId = ticketSellerId,
+                IsPublic = false
             };
 
             this.data.Movies.Add(movieData);
@@ -138,7 +129,7 @@ namespace MovieLibrary.Services.Movies
             return movieData.Id;
         }
 
-        public bool Edit(int id, string title, string description, string imageUrl, int year, int runtimeInMinutes, int genreId)
+        public bool Edit(int id, string title, string description, string imageUrl, int year, int runtimeInMinutes, int genreId, bool IsPublic)
         {
             var movieData = this.data.Movies.Find(id);
 
@@ -153,6 +144,8 @@ namespace MovieLibrary.Services.Movies
             movieData.Year = year;
             movieData.RuntimeInMinutes = runtimeInMinutes;
             movieData.GenreId = genreId;
+            movieData.IsPublic = IsPublic;
+                
 
 
 
@@ -169,9 +162,18 @@ namespace MovieLibrary.Services.Movies
         public IEnumerable<LatestMoviesServiceModel> Latest()
             => this.data
                 .Movies
+                .Where(m=>m.IsPublic)
                 .OrderByDescending(m => m.Id)
                 .ProjectTo<LatestMoviesServiceModel>(this.mapper.ConfigurationProvider)
                 .Take(3)
                 .ToList();
+
+        public void ChangeVisibility(int movieId)
+        {
+            var movie = this.data.Movies.Find(movieId);
+            movie.IsPublic = !movie.IsPublic;
+
+            this.data.SaveChanges();
+        }
     }
 }

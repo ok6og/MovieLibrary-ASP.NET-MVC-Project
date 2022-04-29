@@ -20,11 +20,19 @@
                 <a class="nav-link text-dark" asp-area="" asp-controller="Movies" asp-action="Mine">My Movies</a>
             </li>
         }
-        else if(!userIsAdmin())
+        else if (!userIsAdmin())
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="TicketSellers" asp-action="Become">Become Ticket Seller</a>
             </li>
+        }
+        else if (userIsAdmin())
+        {
+
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="Admin/Movies/All">Administration</a>
+            </li>
+
         }
 
 

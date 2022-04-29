@@ -8,7 +8,7 @@
                 <img class="card-img-top" src="@movie.ImageUrl" alt="@movie.Title - (@movie.Year)">
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">@movie.Title (@movie.Year)</h5>
-                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" class="btn btn-primary">View</a>
+                    <a asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" asp-route-information="@movie.GetInformation()" class="btn btn-primary">View</a>
                     @if (ViewBag.AllowCarEdit == true || User.IsAdmin())
                     {
                         <a asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-warning">Edit</a>

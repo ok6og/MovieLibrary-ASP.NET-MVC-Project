@@ -5,7 +5,7 @@ using MovieLibrary.Services.Movies;
 
 namespace MovieLibrary.Models.Movies
 {
-    public class MovieFormModel
+    public class MovieFormModel : IMovieModel
     {
 
         [Required]
@@ -33,5 +33,7 @@ namespace MovieLibrary.Models.Movies
         [Display(Name = "Genre")]
         public int GenreId { get; init; }
         public IEnumerable<MovieGenreServiceModel>? Genres { get; set; }
+
+        public string GenreName { get; } = "Genre";
     }
 }

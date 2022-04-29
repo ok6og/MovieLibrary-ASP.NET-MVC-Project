@@ -23,6 +23,8 @@ namespace MovieLibrary.Data.Models
         [Required]
         public int Year { get; set; }
 
+        public bool IsPublic { get; set; }
+
         [Required]
         public int RuntimeInMinutes { get; set; }        
         public int GenreId { get; set; }

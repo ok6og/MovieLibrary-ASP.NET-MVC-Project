@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MovieLibrary.Infrastructure;
+using MovieLibrary.Infrastructure.Extensions;
 using MovieLibrary.Models.Movies;
 using MovieLibrary.Services.Movies;
 using MovieLibrary.Services.TicketSellers;
+
+using static MovieLibrary.WebConstants;
 
 namespace MovieLibrary.Controllers
 {
@@ -50,6 +52,18 @@ namespace MovieLibrary.Controllers
             return View(myMovies);
         }
 
+        public IActionResult Details(int id, string information)
+        {
+            var movie = this.movies.Details(id);
+            var movieInfo = movie.GetInformation();
+
+            if (information != movieInfo)
+            {
+                return BadRequest();
+            }
+            return View(movie);
+        }
+
 
         [HttpGet]
         [Authorize]
@@ -87,7 +101,7 @@ namespace MovieLibrary.Controllers
                 return View(movie);
             }
 
-            this.movies.Create(
+            var movieId = this.movies.Create(
                 movie.Title,
                 movie.Description,
                 movie.ImageUrl,
@@ -96,7 +110,9 @@ namespace MovieLibrary.Controllers
                 movie.GenreId,
                 ticketSellerId);
 
-            return RedirectToAction(nameof(All));
+            TempData[GlobalMessageKey] = "Your movie was successfully added and is waiting for approval!";
+
+            return RedirectToAction(nameof(Details), new {id= movieId, information = movie.GetInformation() });
         }
         [Authorize]
         public  IActionResult Edit(int id)
@@ -151,10 +167,12 @@ namespace MovieLibrary.Controllers
                 movie.ImageUrl,
                 movie.Year,
                 movie.RuntimeInMinutes,
-                movie.GenreId);
+                movie.GenreId,
+                this.User.IsAdmin());
 
-            
-            return RedirectToAction(nameof(All));
+            TempData[GlobalMessageKey] = $"Movie wassuccessfully edited {(this.User.IsAdmin() ? string.Empty : "and is waiting for approval!")}";
+
+            return RedirectToAction(nameof(Details), new { id, information = movie.GetInformation() });
         }
     }
 }

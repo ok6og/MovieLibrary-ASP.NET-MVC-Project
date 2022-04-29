@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieLibrary.Data;
 using MovieLibrary.Data.Models;
-using MovieLibrary.Infrastructure;
+using MovieLibrary.Infrastructure.Extensions;
 using MovieLibrary.Services.Movies;
 using MovieLibrary.Services.Statistics;
 using MovieLibrary.Services.TicketSellers;
@@ -31,6 +31,7 @@ builder.Services.AddControllersWithViews(options =>
         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>()
     );
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddMemoryCache();
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 builder.Services.AddTransient<IMovieService, MovieService>();
 builder.Services.AddTransient<ITicketSellerService, TicketSellerService>();
@@ -56,13 +57,20 @@ app.UseHttpsRedirection()
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization();
-app.MapDefaultControllerRoute();
 
 
 app.MapControllerRoute(
-    name:"Areas",
+    name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "Movie Details",
+    pattern: "/Movies/Details/{id}/{information}",
+    defaults: new { controller = "Movie", action = "Details" });
 
 app.MapRazorPages();
 app.Run();

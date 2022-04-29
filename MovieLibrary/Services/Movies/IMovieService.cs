@@ -5,11 +5,12 @@ namespace MovieLibrary.Services.Movies
     public interface IMovieService
     {
         MovieQueryServiceModel All(
-            string genre,
-            string searchTerm,
-            MovieSorting sorting,
-            int currentPage,
-            int moviesPerPage);
+            string genre = null,
+            string searchTerm = null,
+            MovieSorting sorting = MovieSorting.DateCreated,
+            int currentPage = 1,
+            int moviesPerPage = int.MaxValue,
+            bool publicOnly = true);
         MovieDetailsServiceModel Details(int carId);
 
         public IEnumerable<LatestMoviesServiceModel>Latest();
@@ -30,10 +31,13 @@ namespace MovieLibrary.Services.Movies
                 string imageUrl,
                 int year,
                 int runtimeInMinutes,
-                int genreId);
+                int genreId,
+                bool IsPublic);
         IEnumerable<MovieServiceModel> ByUser(string userId);
 
         bool IsByTicketSeller(int movieId, int ticketSellerId);
+
+        void ChangeVisibility(int movieId);
         IEnumerable<string> AllMovieGenres();
         IEnumerable<MovieGenreServiceModel> AllGenres();
 

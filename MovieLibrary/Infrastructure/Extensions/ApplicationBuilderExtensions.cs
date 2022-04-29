@@ -5,7 +5,7 @@ using MovieLibrary.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using static MovieLibrary.WebConstants;
 
-namespace MovieLibrary.Infrastructure
+namespace MovieLibrary.Infrastructure.Extensions
 {
     public static class ApplicationBuilderExtensions
     {

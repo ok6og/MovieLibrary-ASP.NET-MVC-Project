@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieLibrary.Data;
 using MovieLibrary.Data.Models;
-using MovieLibrary.Infrastructure;
+using MovieLibrary.Infrastructure.Extensions;
 using MovieLibrary.Models.TicketSeller;
+
+using static MovieLibrary.WebConstants;
 
 namespace MovieLibrary.Controllers
 {
@@ -50,6 +52,8 @@ namespace MovieLibrary.Controllers
 
             this.data.TicketSeller.Add(sellerData);
             this.data.SaveChanges();
+
+            this.TempData[GlobalMessageKey] = "Thank you for becoming a dealer!";
 
             return RedirectToAction("All", "Movies");
         }

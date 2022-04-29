@@ -15,8 +15,12 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\ok6og\source\repos\ok6og\MovieLibrary-ASP.NET-MVC-Project\MovieLibrary\MovieLibrary
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Areas/Admin/Views/Movies/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcTW92aWVzXEluZGV4LmNzaHRtbA==
+[C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Areas/Admin/Views/Movies/All.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcTW92aWVzXEFsbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Areas/Admin/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Areas/Admin/Views/_ViewStart.cshtml]
@@ -49,6 +53,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Views/Movies/All.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aWVzXEFsbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Views/Movies/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW92aWVzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/ok6og/source/repos/ok6og/MovieLibrary-ASP.NET-MVC-Project/MovieLibrary/MovieLibrary/Views/Movies/Edit.cshtml]

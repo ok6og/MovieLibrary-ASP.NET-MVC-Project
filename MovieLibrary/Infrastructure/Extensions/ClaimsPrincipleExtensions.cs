@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using static MovieLibrary.WebConstants;
 
-namespace MovieLibrary.Infrastructure
+namespace MovieLibrary.Infrastructure.Extensions
 {
     public static class ClaimsPrincipleExtensions
     {

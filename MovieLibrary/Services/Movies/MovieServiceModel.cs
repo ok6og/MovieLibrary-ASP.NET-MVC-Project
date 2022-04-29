@@ -1,6 +1,6 @@
 ﻿namespace MovieLibrary.Services.Movies
 {
-    public class MovieServiceModel
+    public class MovieServiceModel : IMovieModel
     {
         public int Id { get; init; }
         public string Title { get; init; }
@@ -9,5 +9,7 @@
         public int Year { get; init; }
         public int RuntimeInMinutes { get; init; }
         public string GenreName { get; init; }
+
+        public bool IsPublic { get; init; }
     }
 }
