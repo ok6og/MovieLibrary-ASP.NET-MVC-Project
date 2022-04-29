@@ -25,9 +25,12 @@ builder.Services.AddDefaultIdentity<User>(options =>
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<MovieLibraryDbContext>();
+
+
 builder.Services.AddControllersWithViews(options =>
         options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>()
     );
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 builder.Services.AddTransient<IMovieService, MovieService>();
 builder.Services.AddTransient<ITicketSellerService, TicketSellerService>();
@@ -59,14 +62,6 @@ app.MapDefaultControllerRoute();
 app.MapControllerRoute(
     name:"Areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-
-
-
-
-
-
-
 
 
 app.MapRazorPages();

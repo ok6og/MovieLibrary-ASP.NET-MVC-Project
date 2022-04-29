@@ -4,6 +4,8 @@ using MovieLibrary.Models;
 using MovieLibrary.Data;
 using MovieLibrary.Models.Home;
 using MovieLibrary.Services.Statistics;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace MovieLibrary.Controllers
 {
@@ -11,30 +13,25 @@ namespace MovieLibrary.Controllers
     {
         private readonly IStatisticsService statistics;
         private readonly MovieLibraryDbContext data;
+        private readonly IMapper mapper;
 
         public HomeController(
             IStatisticsService statistics,
-            MovieLibraryDbContext data)
+            MovieLibraryDbContext data,
+            IMapper mapper)
         {
             this.statistics = statistics;
             this.data = data;
+            this.mapper = mapper;
         }
 
         public IActionResult Index()
         {
-            
+
             var movies = this.data
                 .Movies
                 .OrderByDescending(m => m.Id)
-                .Select(c => new MovieIndexViewModel
-                {
-                    Id = c.Id,
-                    Title = c.Title,
-                    Description = c.Description,
-                    ImageUrl = c.ImageUrl,
-                    RuntimeInMinutes = c.RuntimeInMinutes,                    
-                    Year = c.Year,
-                })
+                .ProjectTo<MovieIndexViewModel>(this.mapper.ConfigurationProvider)
                 .Take(3)
                 .ToList();
 

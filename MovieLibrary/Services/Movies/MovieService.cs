@@ -1,4 +1,6 @@
-﻿using MovieLibrary.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using MovieLibrary.Data;
 using MovieLibrary.Data.Models;
 using MovieLibrary.Models;
 
@@ -7,9 +9,14 @@ namespace MovieLibrary.Services.Movies
     public class MovieService : IMovieService
     {
         private readonly MovieLibraryDbContext data;
+        private readonly IMapper mapper;
 
-        public MovieService(MovieLibraryDbContext data)
-            => this.data = data;
+        public MovieService(MovieLibraryDbContext data, IMapper mapper)
+        {
+            this.data = data;
+            this.mapper = mapper;
+        }
+         
 
         public MovieQueryServiceModel All(
             string genre,
@@ -63,20 +70,7 @@ namespace MovieLibrary.Services.Movies
             var movie = this.data
             .Movies
             .Where(m => m.Id == id)
-            .Select(m => new MovieDetailsServiceModel
-            {
-                Id = m.Id,
-                Description = m.Description,
-                GenreName = m.Genre.Name,
-                RuntimeInMinutes = m.RuntimeInMinutes,
-                ImageUrl = m.ImageUrl,
-                Title = m.Title,
-                Year = m.Year,
-                GenreId = m.Genre.Id,
-                TicketSellerId = m.TicketSellerId,
-                TicketSellerName = m.TicketSeller.Name,
-                UserId = m.TicketSeller.UserId
-            })
+            .ProjectTo<MovieDetailsServiceModel>(this.mapper.ConfigurationProvider)
             .FirstOrDefault();
 
             return movie;

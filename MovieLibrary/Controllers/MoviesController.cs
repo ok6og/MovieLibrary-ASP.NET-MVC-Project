@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieLibrary.Infrastructure;
 using MovieLibrary.Models.Movies;
@@ -11,12 +12,14 @@ namespace MovieLibrary.Controllers
     {
         private readonly IMovieService movies;
         private readonly ITicketSellerService ticketSeller;
+        private readonly IMapper mapper;
 
 
-        public MoviesController(IMovieService movies, ITicketSellerService ticketSeller)
+        public MoviesController(IMovieService movies, ITicketSellerService ticketSeller, IMapper mapper)
         {
             this.movies = movies;
             this.ticketSeller = ticketSeller;
+            this.mapper = mapper;
         }
            
 
@@ -111,18 +114,9 @@ namespace MovieLibrary.Controllers
             {
                 return Unauthorized();
             }
-
-            return View(new MovieFormModel
-            {
-                Title = movie.Title,
-                Description = movie.Description,
-                ImageUrl = movie.ImageUrl,
-                Year = movie.Year,
-                RuntimeInMinutes = movie.RuntimeInMinutes,
-                GenreId = movie.GenreId,
-                
-                Genres = this.movies.AllGenres()
-            });
+            var movieForm = this.mapper.Map<MovieFormModel>(movie);
+            movieForm.Genres = this.movies.AllGenres();
+            return View(movieForm);
         }
 
         [Authorize]
