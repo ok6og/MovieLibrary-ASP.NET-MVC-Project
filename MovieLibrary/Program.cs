@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieLibrary.Data;
 using MovieLibrary.Data.Models;
 using MovieLibrary.Infrastructure.Extensions;
+using MovieLibrary.Services.Actors;
 using MovieLibrary.Services.Movies;
 using MovieLibrary.Services.Statistics;
 using MovieLibrary.Services.TicketSellers;
@@ -32,9 +33,11 @@ builder.Services.AddControllersWithViews(options =>
     );
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IActorsService, ActorsService>();
 builder.Services.AddTransient<IStatisticsService, StatisticsService>();
 builder.Services.AddTransient<IMovieService, MovieService>();
 builder.Services.AddTransient<ITicketSellerService, TicketSellerService>();
+
 
 var app = builder.Build();
 

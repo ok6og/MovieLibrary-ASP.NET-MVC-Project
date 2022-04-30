@@ -2,7 +2,6 @@
 using MovieLibrary.Data.Models;
 using MovieLibrary.Services.TicketSellers;
 using MovieLibrary.Test.Mocks;
-using MyShirtsApp.Test.Mocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;

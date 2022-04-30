@@ -22,7 +22,6 @@ namespace MovieLibrary.Data.Models
 
         [Required]
         public int Year { get; set; }
-
         public bool IsPublic { get; set; }
 
         [Required]
@@ -31,5 +30,7 @@ namespace MovieLibrary.Data.Models
         public Genre Genre { get; init; }
         public int TicketSellerId { get; init; }
         public TicketSeller TicketSeller { get; init; }
+
+        public List<ActorMovie> ActorsMovies { get; set; }
     }
 }

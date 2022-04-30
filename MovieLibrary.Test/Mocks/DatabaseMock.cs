@@ -2,7 +2,7 @@
 using MovieLibrary.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace MyShirtsApp.Test.Mocks
+namespace MovieLibrary.Test.Mocks
 {
     
     public static class DatabaseMock

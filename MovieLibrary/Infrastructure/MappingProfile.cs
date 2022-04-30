@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MovieLibrary.Data.Models;
+using MovieLibrary.Models;
 using MovieLibrary.Models.Movies;
+using MovieLibrary.Services.Actors;
 using MovieLibrary.Services.Movies;
 
 namespace MovieLibrary.Infrastructure
@@ -16,6 +18,8 @@ namespace MovieLibrary.Infrastructure
                 .ForMember(m => m.GenreName, cfg => cfg.MapFrom(m => m.Genre.Name));
 
             this.CreateMap<MovieDetailsServiceModel, MovieFormModel>();
+
+            this.CreateMap<Actor, ActorServiceModel>();
 
             this.CreateMap<Movie, MovieDetailsServiceModel>()
                 .ForMember(m=> m.UserId, cfg => cfg.MapFrom(m=> m.TicketSeller.UserId))

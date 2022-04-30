@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using MovieLibrary.Data;
 using MovieLibrary.Data.Models;
 using MovieLibrary.Models;
+using MovieLibrary.Services.Actors;
 
 namespace MovieLibrary.Services.Movies
 {
@@ -174,6 +175,21 @@ namespace MovieLibrary.Services.Movies
             movie.IsPublic = !movie.IsPublic;
 
             this.data.SaveChanges();
+        }
+
+        public bool Delete(int id)
+        {
+            var movieData = this.data.Movies.Find(id);
+
+            if (movieData == null)
+            {
+                return false;
+            }
+
+            this.data.Movies.Remove(movieData);
+            this.data.SaveChanges();
+
+            return true;
         }
     }
 }

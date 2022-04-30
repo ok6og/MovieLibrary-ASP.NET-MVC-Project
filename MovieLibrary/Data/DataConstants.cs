@@ -13,6 +13,14 @@
             public const int RuntimeMinValue = 1;
             public const int RuntimeMaxValue = 999;
         }
+
+        public class Actor
+        {
+            public const int BioMinLength = 10;
+            public const int BioMaxLength = 1000;
+            public const int FullNameMinValue = 2;
+            public const int FullNameMaxValue = 100;
+        }
         public class Genre
         {
             public const int NameMaxLength = 25;

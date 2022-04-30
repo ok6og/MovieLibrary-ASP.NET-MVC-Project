@@ -42,5 +42,7 @@ namespace MovieLibrary.Services.Movies
         IEnumerable<MovieGenreServiceModel> AllGenres();
 
         bool GenreExists(int genreId);
+
+        public bool Delete(int id);
     }
 }

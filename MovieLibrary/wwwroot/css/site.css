@@ -29,3 +29,20 @@ body {
     white-space:nowrap;
     line-height:60px;
 }
+
+.thisImage{
+    float:left;
+}
+
+.bg-white {
+    --bs-bg-opacity: 1;
+    background-color: #3AAFA9;
+
+.body {
+  margin-bottom: 60px;
+  background-color:red;
+}
+body {
+    margin-bottom: 60px;
+    background-color: red;
+}

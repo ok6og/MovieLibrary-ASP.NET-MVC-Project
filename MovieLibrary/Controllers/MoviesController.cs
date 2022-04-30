@@ -179,5 +179,15 @@ namespace MovieLibrary.Controllers
 
             return RedirectToAction(nameof(Details), new { id, information = movie.GetInformation() });
         }
+
+
+
+        [HttpPost]
+        public IActionResult DeleteConfirmed(int Id)
+        {           
+            var edited = this.movies.Delete(Id);
+
+            return Ok();
+        }
     }
 }

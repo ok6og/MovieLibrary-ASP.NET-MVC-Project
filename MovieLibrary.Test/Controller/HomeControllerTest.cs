@@ -4,7 +4,6 @@ using MovieLibrary.Controllers;
 using Moq;
 using AutoMapper;
 using MovieLibrary.Services.Movies;
-using MyShirtsApp.Test.Mocks;
 using MovieLibrary.Test.Mocks;
 using MovieLibrary.Services.Statistics;
 using MovieLibrary.Data.Models;
@@ -17,6 +16,7 @@ using System;
 
 using static MovieLibrary.Test.Data.Movies;
 using static MovieLibrary.WebConstants.Cache;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace MyShirtsApp.Test.Controllers
 {
@@ -26,24 +26,20 @@ namespace MyShirtsApp.Test.Controllers
         [Fact]
         public void IndexShouldReturnViewWithCorrectModel()
         {
-            //arrange
+
             var data = DatabaseMock.Instance;
             var mapper = MapperMock.Instance;
-
+            var cache = new MemoryCache(new MemoryCacheOptions());
 
             var movieService = new MovieService(data, mapper);
-            var statisticsService = new StatisticsService(data);
+            var homeController = new HomeController(movieService, cache);
 
-            var homeController = new HomeController(movieService,null);
 
-            //act
             var result = homeController.Index();
-            //assert
             Assert.NotNull(result);
-            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.IsType<ViewResult>(result);
 
-            var model = viewResult.Model;
-            var indexViewModel = Assert.IsType<LatestMoviesServiceModel>(model);
+
         }
         [Fact]
         public void ErrorShouldReturnView()
@@ -60,9 +56,10 @@ namespace MyShirtsApp.Test.Controllers
         [Fact]
         public void IndexShouldReturnView()
         {
+            var cache = new MemoryCache(new MemoryCacheOptions());
             var movieService = new MovieService(DatabaseMock.Instance, MapperMock.Instance);
 
-            var homeController = new HomeController(null,null);
+            var homeController = new HomeController(movieService, cache);
 
             var result = homeController.Index();
 

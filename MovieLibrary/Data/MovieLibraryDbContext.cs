@@ -14,6 +14,9 @@ namespace MovieLibrary.Data
         public DbSet<Movie> Movies { get; init; }
         public DbSet<Genre> Genres { get; init; }
         public DbSet<TicketSeller> TicketSeller { get; init; }
+        public DbSet<Actor> Actors { get; init; }
+        public DbSet<ActorMovie> ActorsMovies { get; init; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -38,7 +41,26 @@ namespace MovieLibrary.Data
                 .WithOne()
                 .HasForeignKey<TicketSeller>(t => t.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
+            builder
+                .Entity<ActorMovie>()
+                .HasKey(am => new
+                {
+                    am.ActorId,
+                    am.MovieId
+                });
+            builder
+                .Entity<ActorMovie>()
+                .HasOne(m => m.Movie)
+                .WithMany(am => am.ActorsMovies)
+                .HasForeignKey(m => m.MovieId);
+
+            builder
+                .Entity<ActorMovie>()
+                .HasOne(m => m.Actor)
+                .WithMany(am => am.ActorsMovies)
+                .HasForeignKey(m => m.ActorId);
+
 
             base.OnModelCreating(builder);
         }

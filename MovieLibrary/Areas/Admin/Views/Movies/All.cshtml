@@ -33,7 +33,7 @@
                 <td scope="col">
 
                     <a asp-area="" asp-controller="Movies" asp-action="Edit" asp-route-id="@movie.Id" class="btn btn-warning">Edit</a>
-                    <a asp-area="" asp-controller="Movies" asp-action="Delete" asp-route-id="@movie.Id" class="btn btn-danger">Delete</a>
+                    <a asp-area="" asp-controller="Movies" asp-action="DeleteConfirmed" asp-route-id="@movie.Id" class="btn btn-danger">Delete</a>
                     <a asp-area="Admin" asp-controller="Movies" asp-action="ChangeVisibility" asp-route-id="@movie.Id" class="btn btn-info">@(movie.IsPublic ? "Hide" : "Show")</a>
                     <a asp-area="" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id" asp-route-information="@movie.GetInformation()" class="btn btn-primary">View</a>
                     
